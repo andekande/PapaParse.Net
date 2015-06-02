@@ -88,3 +88,5 @@ License
 The original PapaParse is MIT licensed. So is PapaParse.Net.
 
 For Ideas and Improvements reach out to Twitter @clientjs
+
+![PapaParse.Net Logo](PapaParseNetLogo.jpg) 
