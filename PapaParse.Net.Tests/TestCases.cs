@@ -61,6 +61,8 @@ namespace PapaParse.Net.Tests
                 }
                 _response.Content = new ByteArrayContent(filecontent);
                 _response.Content.Headers.ContentRange = new System.Net.Http.Headers.ContentRangeHeaderValue(filesize);
+                if (filesize != filecontent.Length)
+                    _response.StatusCode = System.Net.HttpStatusCode.PartialContent;
             }
 
             var tcs = new System.Threading.Tasks.TaskCompletionSource<HttpResponseMessage>();
@@ -398,6 +400,19 @@ namespace PapaParse.Net.Tests
             Assert.IsTrue(actual.data.SequenceEqual(new List<List<string>>() { 
                 new List<string>() {"a", "b", "c\"c\""},
                 new List<string>() {"d", "e", "f"}
+            }, new Resultdatacomparer()));
+            Assert.AreEqual(0, actual.errors.Count);
+        }
+
+        [TestCategory("CORE_PARSER_TESTS")]
+        [TestMethod]
+        public void Empty_quoted_field_at_EOF_is_empty()
+        {
+            Result actual = new Parser(null).parse("a,b,\"\"\na,b,\"\"");
+
+            Assert.IsTrue(actual.data.SequenceEqual(new List<List<string>>() { 
+                new List<string>() {"a", "b", ""},
+                new List<string>() {"a", "b", ""}
             }, new Resultdatacomparer()));
             Assert.AreEqual(0, actual.errors.Count);
         }

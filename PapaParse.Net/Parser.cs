@@ -110,7 +110,7 @@ namespace PapaParse.Net
 		    {
 			    if (ignoreLastRow)
 				    return returnable(false);
-			    if (String.IsNullOrEmpty(newValue))
+			    if (newValue == null)
 				    newValue = Papa.Substr(input, cursor);
 			    row.Add(newValue);
 			    cursor = inputLen;	// important in case parsing is paused
@@ -215,7 +215,7 @@ namespace PapaParse.Net
 									index = cursor
 								});
 							}
-							return finish(String.Empty);
+							return finish(null);
 						}
 
 						if (quoteSearch == inputLen-1)
@@ -308,7 +308,7 @@ namespace PapaParse.Net
 				break;
             }
 
-            return finish(String.Empty);
+            return finish(null);
         }
 
 
