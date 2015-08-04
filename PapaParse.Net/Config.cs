@@ -7,6 +7,7 @@ namespace PapaParse.Net
     {
         public string delimiter = "";   // auto-detect;
         public string newline = "";     // auto-detect;
+        public char quoteChar = Char.MinValue;
         public bool header = false;
         public bool dynamicTyping = false;
         public int preview = 0;

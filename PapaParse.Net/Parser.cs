@@ -9,6 +9,7 @@ namespace PapaParse.Net
     {
         string delim;
         string newline;
+        char quoteChar;
         string comments;
         Action<Result, ParserHandle> step;
         int preview;
@@ -32,6 +33,11 @@ namespace PapaParse.Net
             step = config.step;
             preview = config.preview;
             fastMode = config.fastMode;
+            quoteChar = config.quoteChar;
+
+            // Quote Character defaults to DoubleQuote
+            if (quoteChar == Char.MinValue)
+                quoteChar = '"';
 
             // Delimiter must be valid
             if (String.IsNullOrEmpty(delim) || Array.IndexOf(Papa.BAD_DELIMITERS, delim) > -1 )
@@ -132,7 +138,7 @@ namespace PapaParse.Net
             if (String.IsNullOrEmpty(input))
                 return returnable(false);
 
-            if (fastMode == true || (fastMode != false && input.IndexOf('"') == -1))
+            if (fastMode == true || (fastMode != false && input.IndexOf(quoteChar) == -1))
 			{
                 string[] rows = input.Split(newlineSplit, StringSplitOptions.None);
 				for (int i = 0; i < rows.Length; i++)
@@ -190,7 +196,7 @@ namespace PapaParse.Net
                 }
 
                 // Field has opening quote
-                if (input[cursor] == '"')
+                if (input[cursor] == quoteChar)
 				{
 					// Start our search for the closing quote where the cursor is
 					int quoteSearch = cursor;
@@ -201,7 +207,7 @@ namespace PapaParse.Net
 					for (;;)
 					{
 						// Find closing quote
-						quoteSearch = input.IndexOf('"', quoteSearch+1);
+						quoteSearch = input.IndexOf(quoteChar, quoteSearch+1);
 
 						if (quoteSearch == -1)
 						{
@@ -221,12 +227,12 @@ namespace PapaParse.Net
 						if (quoteSearch == inputLen-1)
 						{
 							// Closing quote at EOF
-							string value = Regex.Replace(Papa.Substring(input, cursor, quoteSearch), "\"\"", "\"", RegexOptions.Multiline);
+                            string value = Regex.Replace(Papa.Substring(input, cursor, quoteSearch), quoteChar.ToString() + quoteChar.ToString(), quoteChar.ToString(), RegexOptions.Multiline);
 							return finish(value);
 						}
 
 						// If this quote is escaped, it's part of the data; skip it
-						if (input[quoteSearch+1] == '"')
+						if (input[quoteSearch+1] == quoteChar)
 						{
 							quoteSearch++;
 							continue;
@@ -235,7 +241,7 @@ namespace PapaParse.Net
 						if (input[quoteSearch+1].ToString() == delim)
 						{
 							// Closing quote followed by delimiter
-                            row.Add(Regex.Replace(Papa.Substring(input, cursor, quoteSearch), "\"\"", "\"", RegexOptions.Multiline));
+                            row.Add(Regex.Replace(Papa.Substring(input, cursor, quoteSearch), quoteChar.ToString() + quoteChar.ToString(), quoteChar.ToString(), RegexOptions.Multiline));
 							cursor = quoteSearch + 1 + delimLen;
 							nextDelim = input.IndexOf(delim, cursor);
 							nextNewline = input.IndexOf(newline, cursor);
@@ -245,7 +251,7 @@ namespace PapaParse.Net
 						if (Papa.Substr(input, quoteSearch+1, newlineLen) == newline)
 						{
 							// Closing quote followed by newline
-                            row.Add(Regex.Replace(Papa.Substring(input, cursor, quoteSearch), "\"\"", "\"", RegexOptions.Multiline));
+                            row.Add(Regex.Replace(Papa.Substring(input, cursor, quoteSearch), quoteChar.ToString() + quoteChar.ToString(), quoteChar.ToString(), RegexOptions.Multiline));
 							saveRow(quoteSearch + 1 + newlineLen);
 							nextDelim = input.IndexOf(delim, cursor);	// because we may have skipped the nextDelim in the quoted field
 

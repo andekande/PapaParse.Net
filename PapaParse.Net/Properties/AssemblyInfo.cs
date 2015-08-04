@@ -7,14 +7,14 @@ using System.Runtime.InteropServices;
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("PapaParse.Net")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("A .Net port of the famous Javascript CSV Parser papaparse.com")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PapaParse.Net")]
-[assembly: AssemblyCopyright("Copyright ©  2015")]
+[assembly: AssemblyCopyright("MIT License")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: NeutralResourcesLanguage("de")]
+[assembly: NeutralResourcesLanguage("en")]
 
 // Versionsinformationen für eine Assembly bestehen aus den folgenden vier Werten:
 //

@@ -73,6 +73,7 @@ namespace PapaParse.Net
             _conf.skipEmptyLines = obj.skipEmptyLines;
             _conf.step = obj.step;
             _conf.worker = obj.worker;
+            _conf.quoteChar = obj.quoteChar;
 
             return _conf;
         }

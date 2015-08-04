@@ -1300,6 +1300,32 @@ namespace PapaParse.Net.Tests
             }, new Resultdatacomparer()), "A line must be absolutely empty to be considered empty");
             Assert.AreEqual(0, actual.errors.Count);
         }
+
+        [TestCategory("PARSE_TESTS")]
+        [TestMethod]
+        public void SingleQuote_Character_gets_autodetected()
+        {
+            Result actual = Papa.parse("'a','b','c'\r\n'd','e','f'");
+
+            Assert.IsTrue(actual.data.SequenceEqual(new List<List<string>>() {
+                new List<string>() {"a", "b", "c"},
+                new List<string>() {"d", "e", "f"}
+            }, new Resultdatacomparer()));
+            Assert.AreEqual(0, actual.errors.Count);
+        }
+
+        [TestCategory("PARSE_TESTS")]
+        [TestMethod]
+        public void Quote_Character_can_be_customized()
+        {
+            Result actual = Papa.parse("#a#,#b#,#c#\r\n#d#,#e#,#f#", new Config() { quoteChar = '#' });
+
+            Assert.IsTrue(actual.data.SequenceEqual(new List<List<string>>() {
+                new List<string>() {"a", "b", "c"},
+                new List<string>() {"d", "e", "f"}
+            }, new Resultdatacomparer()));
+            Assert.AreEqual(0, actual.errors.Count);
+        }
         #endregion
 
         #region CUSTOM_TESTS

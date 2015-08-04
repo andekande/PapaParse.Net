@@ -45,7 +45,7 @@ namespace PapaParse.Net
 
             Action fillHeaderFields = () =>
             {
-                if (_results == null)
+                if (_results == null || _results.data.Count == 0)
                     return;
                 for (int i = 0; needsHeaderRow() && i < _results.data.Count; i++)
                     for (int j = 0; j < _results.data[i].Count; j++)
@@ -146,6 +146,14 @@ namespace PapaParse.Net
 				}
 				_results.meta.delimiter = _config.delimiter;
 			}
+
+            if (_config.quoteChar == Char.MinValue)
+		    {
+                if (Papa.Substr(input, 0, 1) == "'" && Papa.Substr(input, input.IndexOf(_config.delimiter, 0) - 1, 1) == "'")
+                    _config.quoteChar = '\'';
+			    else
+                    _config.quoteChar = '"';
+            }
 
             Config parserConfig = Papa.copy(_config);
 			if (_config.preview > 0 && _config.header)
